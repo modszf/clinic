@@ -1,0 +1,16 @@
+{
+  "name": "voucher-bot",
+  "version": "1.0.0",
+  "description": "AI-powered Viber Voucher Bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.x.x",
+    "axios": "^1.x.x",
+    "dotenv": "^16.x.x",
+    "googleapis": "^126.x.x",
+    "viber-bot": "^1.x.x"
+  }
+}
