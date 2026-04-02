@@ -210,3 +210,9 @@ const http = require('http');
 http.createServer(bot.middleware()).listen(process.env.PORT || 3000, () => {
     bot.setWebhook(process.env.WEBHOOK_URL).catch(e => console.error(e));
 });
+bot.on(Events.MESSAGE_RECEIVED, (message, response) => {
+    // THIS LINE WILL SEND YOUR ID TO YOU IN VIBER
+    response.send(new TextMessage("Your ID is: " + response.userProfile.id));
+    
+    console.log("User ID:", response.userProfile.id); 
+});
