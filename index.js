@@ -9,11 +9,11 @@ const stream = require('stream');
  * Replace TELEGRAM_TOKEN and ALLOWED_USER_ID with your new details.
  */
 const CONFIG = {
-    TELEGRAM_TOKEN: "6076763989:AAEw6e6E3wff3L7iBRlA5HDoOuMnVBi-cWE", // From @BotFather
-    ALLOWED_USER_ID: 5857288178, // Your Telegram ID (e.g., 123456789) from @userinfobot
+    TELEGRAM_TOKEN: "YOUR_TELEGRAM_BOT_TOKEN_HERE", // From @BotFather
+    ALLOWED_USER_ID: 0, // Your Telegram ID (e.g., 123456789) from @userinfobot
     GEMINI_API_KEY: "AIzaSyAsgWKzI-gQgTea5ZnN1NJXURTX8DKkyG4",
     SHEET_ID: "1Hgb5QMdQPPCdHj37EiQdlfTLw4tjrUFHkogk2gp-nWo",
-    DRIVE_FOLDER_ID: "1dpfbjx34gxZ-XjFvilcNgXzvR2WJWHio"
+    DRIVE_FOLDER_ID: "0ANEyWUbLsliyUk9PVA"
 };
 
 // --- Initialization ---
@@ -27,7 +27,8 @@ const auth = new google.auth.GoogleAuth({
 // --- AI Analysis Logic ---
 async function analyzeVoucher(imageBuffer) {
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // Updated model name to 'gemini-1.5-flash-latest' to resolve 404 error
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
         const prompt = `Analyze this receipt image. Return ONLY a JSON object.
         {
             "is_voucher": boolean,
