@@ -13,7 +13,7 @@ const CONFIG = {
     ALLOWED_USER_ID: 5857288178, // Your Telegram ID (e.g., 123456789) from @userinfobot
     GEMINI_API_KEY: "AIzaSyAsgWKzI-gQgTea5ZnN1NJXURTX8DKkyG4",
     SHEET_ID: "1Hgb5QMdQPPCdHj37EiQdlfTLw4tjrUFHkogk2gp-nWo",
-    DRIVE_FOLDER_ID: "0ANEyWUbLsliyUk9PVA"
+    DRIVE_FOLDER_ID: "1dpfbjx34gxZ-XjFvilcNgXzvR2WJWHio"
 };
 
 // --- Initialization ---
