@@ -89,8 +89,14 @@ bot.on(Events.MESSAGE_RECEIVED, async (message, response) => {
     const senderId = response.userProfile.id;
     const senderName = response.userProfile.name;
     
-    console.log(`Message from: ${senderName} (${senderId})`);
+    // Log to terminal
+    console.log(`>>> USER_ID_LOG | Name: ${senderName} | ID: ${senderId}`);
     
+    // Handle specific "id" command to return ID in chat
+    if (message instanceof TextMessage && message.text.toLowerCase().trim() === "id") {
+        return response.send(new TextMessage(`Hello ${senderName}!\nYour Viber ID is:\n\n${senderId}`));
+    }
+
     if (message instanceof ImageMessage) {
         try {
             await response.send(new TextMessage("⚙️ AI Processing Voucher..."));
@@ -112,7 +118,7 @@ bot.on(Events.MESSAGE_RECEIVED, async (message, response) => {
             response.send(new TextMessage("⚠️ Error processing voucher. Check logs."));
         }
     } else {
-        response.send(new TextMessage(`Hi ${senderName}! Please send a photo of a voucher/receipt to record it.`));
+        response.send(new TextMessage(`Hi ${senderName}! Please send a photo of a voucher/receipt to record it, or type 'id' to see your ID.`));
     }
 });
 
