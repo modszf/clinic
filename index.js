@@ -89,14 +89,18 @@ bot.on(Events.MESSAGE_RECEIVED, async (message, response) => {
     const senderId = response.userProfile.id;
     const senderName = response.userProfile.name;
     
-    // Log to terminal
-    console.log(`>>> USER_ID_LOG | Name: ${senderName} | ID: ${senderId}`);
+    console.log(`[VIBER_EVENT] Message from: ${senderName} | ID: ${senderId}`);
     
-    // Handle specific "id" command to return ID in chat
-    if (message instanceof TextMessage && message.text.toLowerCase().trim() === "id") {
-        return response.send(new TextMessage(`Hello ${senderName}!\nYour Viber ID is:\n\n${senderId}`));
+    // 1. Check for ID command first
+    if (message instanceof TextMessage) {
+        const text = message.text.toLowerCase().trim();
+        if (text === "id" || text === "my id" || text === "get id") {
+            console.log(`Sending ID back to ${senderName}`);
+            return response.send(new TextMessage(`Hello ${senderName}!\n\nYour Viber ID is:\n${senderId}`));
+        }
     }
 
+    // 2. Handle Images
     if (message instanceof ImageMessage) {
         try {
             await response.send(new TextMessage("⚙️ AI Processing Voucher..."));
@@ -118,13 +122,15 @@ bot.on(Events.MESSAGE_RECEIVED, async (message, response) => {
             response.send(new TextMessage("⚠️ Error processing voucher. Check logs."));
         }
     } else {
-        response.send(new TextMessage(`Hi ${senderName}! Please send a photo of a voucher/receipt to record it, or type 'id' to see your ID.`));
+        // 3. Fallback help message
+        response.send(new TextMessage(`Hi ${senderName}! Send a voucher photo or type 'id' to see your ID.`));
     }
 });
 
-// --- Server Startup with Raw Body Support ---
+// --- Server Startup ---
 const server = http.createServer((req, res) => {
-    if (req.method === 'GET' && req.url === '/') {
+    // Health Check
+    if (req.method === 'GET') {
         res.writeHead(200, { 'Content-Type': 'text/plain' });
         return res.end("Aung Myin Bot is Alive and Running!");
     }
@@ -134,9 +140,16 @@ const server = http.createServer((req, res) => {
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
         req.on('end', () => {
-            // Manually inject the raw body string back into the request for the SDK
-            req.rawBody = body; 
-            bot.middleware()(req, res);
+            try {
+                // Critical: Viber SDK needs the raw body to validate HMAC signature
+                req.rawBody = body; 
+                console.log("POST request received from Viber");
+                bot.middleware()(req, res);
+            } catch (err) {
+                console.error("Middleware Error:", err);
+                res.writeHead(500);
+                res.end();
+            }
         });
     } else {
         res.writeHead(404);
@@ -147,7 +160,7 @@ const server = http.createServer((req, res) => {
 server.listen(CONFIG.PORT, () => {
     console.log(`Server started on port ${CONFIG.PORT}`);
     bot.setWebhook(CONFIG.WEBHOOK_URL)
-        .then(() => console.log(`✅ Webhook set: ${CONFIG.WEBHOOK_URL}`))
+        .then(() => console.log(`✅ Webhook registration attempt for: ${CONFIG.WEBHOOK_URL}`))
         .catch(err => {
             console.error("❌ Webhook Setup Failed!");
             console.error(err);
